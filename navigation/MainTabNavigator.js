@@ -34,7 +34,7 @@ HomeStack.navigationOptions = {
       focused={focused}
       name={
         Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`  : 'md-contact'
+          ? 'ios-person'  : 'md-contact'
       }
     />
   ),
@@ -61,7 +61,7 @@ RestaurantsStack.navigationOptions = {
       },
   },
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-home'} />
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-restaurant' : 'md-home'} />
   ),
 };
 
@@ -86,7 +86,7 @@ SettingsStack.navigationOptions = {
       },
   },
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-options' : 'md-menu'} />
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-menu' : 'md-menu'} />
   ),
 };
 

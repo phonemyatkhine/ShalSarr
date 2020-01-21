@@ -2,10 +2,12 @@ import React from 'react';
 import {
   View,
   Text,
-  StyleSheet
+  StyleSheet,
+  StatusBar
 } from 'react-native'
 
 const ShopLogo = (props) => {
+  StatusBar.setBarStyle('light-content', true);
    return (
      <View style = {styles.titlebar}>
       <Text style = {styles.title} >Shel Chway Tar</Text>
@@ -14,10 +16,19 @@ const ShopLogo = (props) => {
 }
 export default ShopLogo
 
+const statusBarHeight = StatusBar.currentHeight;
+
 const styles = StyleSheet.create({
   titlebar : {
      alignSelf: 'stretch',
-     height: 80,
+     ...Platform.select({
+          ios: {
+             height: 40,
+          },
+          android: {
+           height:  statusBarHeight+40,
+          },
+     }),
      backgroundColor : "#9d000a",
   },
   title : {
@@ -25,7 +36,18 @@ const styles = StyleSheet.create({
     fontSize : 18,
     width : 600,
     paddingLeft:10,
-    paddingTop:40,
+    ...Platform.select({
+         ios: {
+            paddingTop: 5,
+         },
+         android: {
+          paddingTop:  statusBarHeight+5,
+         },
+    }),
     fontWeight : 'bold',
+  },
+  statusbar : {
+    height: StatusBar.currentHeight,
+    backgroundColor: "#9d000a"
   }
 })

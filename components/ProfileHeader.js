@@ -50,7 +50,7 @@ export default ProfileHeader
 const styles = StyleSheet.create({
 
   tab1 : {
-    paddingTop : height/40,
+    paddingTop : height/55,
     paddingLeft : width/18,
     flexDirection : "row",
     flex : 0.1,

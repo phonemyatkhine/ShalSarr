@@ -2,65 +2,67 @@ import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React, { useState } from 'react';
-import { Platform, StatusBar, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, Text, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import * as Facebook from 'expo-facebook';
 
-import AppNavigator from './navigation/AppNavigator';
 import TitleBar from './components/TitleBar';
-import RestaurantTab from './components/RestaurantTabs';
+import AppNavigator from './navigation/AppNavigator';
 import FacebookLogin from './screens/FacebookLogin';
 
+/*
+import RestaurantTab from './components/RestaurantTabs';
+*/
 
 export default function App(props) {
 
-  const FBlogin =  true;
+  const [isLoadingComplete, setLoadingComplete] = useState(false);
 
-  if (FBlogin === true) {
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity onPress= {this.logIn} style={styles.button}>
-          <Text> Login </Text>
-        </TouchableOpacity>
-      </View>
+    if (!isLoadingComplete && !props.skipLoadingScreen) {
+      return (
+        <AppLoading
+          startAsync={loadResourcesAsync}
+          onError={handleLoadingError}
+          onFinish={() => handleFinishLoading(setLoadingComplete)}
+        />
       );
-  } else {
-    return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <TitleBar/>
-        <AppNavigator />
-      </View>
-    );
-  }
-}
-
-los = () => {
-  alert("jajaj");
-}
-logIn = async () => {
-  alert("jajaj");
-  try {
-    await Facebook.initializeAsync('287641608838908');
-    const {
-      type,
-      token,
-      expires,
-      permissions,
-      declinedPermissions,
-    } = await Facebook.logInWithReadPermissionsAsync({
-      permissions: ['public_profile'],
-    });
-    if (type === 'success') {
-      // Get the user's name using Facebook's Graph API
-      const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-      Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
     } else {
-      // type === 'cancel'
+      return (
+        <View style={styles.container}>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          <TitleBar/>
+          <FacebookLogin />
+        </View>
+      );
     }
-  } catch ({ message }) {
-    alert(`Facebook Login Error: ${message}`);
+
+  async function loadResourcesAsync() {
+    await Promise.all([
+      Asset.loadAsync([
+        require('./assets/images/robot-dev.png'),
+        require('./assets/images/robot-prod.png'),
+      ]),
+      Font.loadAsync({
+        // This is the font that we are using for our tab bar
+        ...Ionicons.font,
+        //Ionicons: require('@expo/vector-icons/fonts/Ionicons.ttf'),
+        // We include SpaceMono because we use it in HomeScreen.js. Feel free to
+        // remove this if you are not using it in your app
+        'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+      }),
+    ]);
   }
+
+  function handleLoadingError(error) {
+    // In this case, you might want to report the error to your error reporting
+    // service, for example Sentry
+    console.warn(error);
+  }
+
+  function handleFinishLoading(setLoadingComplete) {
+    setLoadingComplete(true);
+  }
+
+
 }
 
 const styles = StyleSheet.create({
@@ -68,22 +70,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  FBcontainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
+
   label: {
     fontSize: 16,
     fontWeight: 'normal',
     marginBottom: 48,
   },
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#F0004F',
-    padding: 10,
-    paddingTop : 400,
-  },
+
 });
